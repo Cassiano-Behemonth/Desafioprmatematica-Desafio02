@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="pt-BR">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Investigação no Mundo Invertido</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: 'Courier New', monospace;
+    }
+
+    body {
+      background: linear-gradient(135deg, #000000 0%, #330000 50%, #000000 100%);
+      overflow: hidden;
+    }
+
+    .app-wrapper {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 20px;
+      padding-top: 30px;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(220, 20, 60, 0.4) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(139, 0, 0, 0.3) 0%, transparent 50%),
+        linear-gradient(135deg, #000000 0%, #330000 50%, #000000 100%);
+      position: relative;
+      overflow: auto;
+    }
+
+    /* Efeito de interferência */
+    .app-wrapper::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        repeating-linear-gradient(
+          0deg,
+          rgba(0, 0, 0, 0.15) 0px,
+          rgba(0, 0, 0, 0.15) 1px,
+          transparent 1px,
+          transparent 2px
+        );
+      pointer-events: none;
+      animation: flicker 0.15s infinite;
+      z-index: 1;
+    }
+
+    @keyframes flicker {
+      0%, 100% { opacity: 0.97; }
+      50% { opacity: 0.99; }
+    }
+
+    .container {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 600px;
+      width: 100%;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      color: #ff0000;
+      text-shadow: 
+        0 0 10px #ff0000,
+        0 0 20px #8b0000,
+        2px 2px 0px #000;
+      margin: 0 0 20px 0;
+      letter-spacing: 3px;
+      animation: pulse-glow 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { 
+        text-shadow: 
+          0 0 10px #ff0000,
+          0 0 20px #8b0000,
+          2px 2px 0px #000;
+      }
+      50% { 
+        text-shadow: 
+          0 0 20px #ff0000,
+          0 0 40px #8b0000,
+          2px 2px 0px #000;
+      }
+    }
+
+    .counter {
+      color: #00ff00;
+      font-size: 1.2em;
+      margin-bottom: 15px;
+      text-shadow: 0 0 5px #00ff00;
+      letter-spacing: 2px;
+    }
+
+    .card-display {
+      perspective: 1000px;
+      margin: 25px 0;
+    }
+
+    .card {
+      width: 280px;
+      height: 380px;
+      background: linear-gradient(135deg, #1a0000 0%, #000000 100%);
+      border: 3px solid #ff0000;
+      border-radius: 8px;
+      padding: 30px;
+      box-shadow: 
+        0 0 20px rgba(255, 0, 0, 0.5),
+        inset 0 0 20px rgba(139, 0, 0, 0.3),
+        0 10px 40px rgba(0, 0, 0, 0.8);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      position: relative;
+      overflow: hidden;
+      animation: card-reveal 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      margin: 0 auto;
+    }
+
+    @keyframes card-reveal {
+      0% {
+        transform: rotateY(180deg) scale(0.8);
+        opacity: 0;
+      }
+      100% {
+        transform: rotateY(0) scale(1);
+        opacity: 1;
+      }
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent 30%, rgba(255, 0, 0, 0.1) 50%, transparent 70%);
+      animation: shimmer 3s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%) translateY(-100%); }
+      100% { transform: translateX(100%) translateY(100%); }
+    }
+
+    .card-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      text-align: center;
+    }
+
+    .card-type {
+      font-size: 1.8em;
+      font-weight: bold;
+      color: #00ff00;
+      text-shadow: 0 0 10px #00ff00;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .card-icon {
+      font-size: 4em;
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+
+    .card-text {
+      color: #ffffff;
+      font-size: 1.3em;
+      line-height: 1.6;
+      text-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .button-container {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin-top: 30px;
+    }
+
+    button {
+      padding: 15px 40px;
+      font-size: 1.2em;
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+      letter-spacing: 2px;
+      border: 3px solid;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    }
+
+    .btn-next {
+      background: linear-gradient(135deg, #ff0000, #cc0000);
+      color: #ffffff;
+      border-color: #ff0000;
+      text-shadow: 0 0 5px rgba(255, 0, 0, 0.8);
+    }
+
+    .btn-next:hover:not(:disabled) {
+      background: linear-gradient(135deg, #ff3333, #ff0000);
+      box-shadow: 
+        0 0 20px rgba(255, 0, 0, 0.8),
+        0 5px 15px rgba(0, 0, 0, 0.5);
+      transform: scale(1.05);
+    }
+
+    .btn-next:active:not(:disabled) {
+      transform: scale(0.95);
+    }
+
+    .btn-next:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-restart {
+      background: linear-gradient(135deg, #8b0000, #4b0000);
+      color: #00ff00;
+      border-color: #8b0000;
+      text-shadow: 0 0 5px rgba(0, 255, 0, 0.8);
+    }
+
+    .btn-restart:hover {
+      background: linear-gradient(135deg, #a01010, #5b1010);
+      box-shadow: 
+        0 0 20px rgba(139, 0, 0, 0.8),
+        0 5px 15px rgba(0, 0, 0, 0.5);
+      transform: scale(1.05);
+    }
+
+    .btn-restart:active {
+      transform: scale(0.95);
+    }
+
+    .finished-message {
+      color: #00ff00;
+      font-size: 2em;
+      text-shadow: 0 0 10px #00ff00;
+      margin-bottom: 30px;
+      letter-spacing: 2px;
+      animation: pulse 1s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    .info-box {
+      background: rgba(139, 0, 0, 0.3);
+      border: 2px solid #8b0000;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+      color: #00ff00;
+      text-shadow: 0 0 5px #00ff00;
+      font-size: 1.1em;
+      box-shadow: inset 0 0 10px rgba(139, 0, 0, 0.2);
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+  <style>@view-transition { navigation: auto; }</style>
+ </head>
+ <body>
+  <div class="app-wrapper">
+   <div class="container">
+    <h1>⚡ INVESTIGAÇÃO NO MUNDO INVERTIDO ⚡</h1>
+    <div class="info-box">
+     Sorteie as cartas e registre os valores no seu painel de controle
+    </div>
+    <div class="counter">
+     CARTA <span id="current-card">1</span> DE <span id="total-cards">15</span>
+    </div>
+    <div class="card-display" id="card-display">
+     <div class="card">
+      <div class="card-content">
+       <div class="card-type">
+        Pronto?
+       </div>
+       <div class="card-icon">
+        🎴
+       </div>
+       <div class="card-text">
+        Clique em "Próxima Carta" para começar a investigação!
+       </div>
+      </div>
+     </div>
+    </div>
+    <div class="button-container">
+     <button class="btn-next" id="next-btn">Próxima Carta</button> <button class="btn-restart" id="restart-btn">Reiniciar Jogo</button>
+    </div>
+   </div>
+  </div>
+  <script>
+    // Dados das cartas
+    const cartas = [
+      // Energia
+      {
+        tipo: 'ENERGIA',
+        icone: '🔋',
+        texto: 'Uma falha no painel solar drenou 0,4 da bateria.'
+      },
+      // Água
+      {
+        tipo: 'ÁGUA',
+        icone: '💧',
+        texto: 'Foi encontrado um reservatório escondido. Ganhou 1/2 litros de água.'
+      },
+      // Comida
+      {
+        tipo: 'COMIDA',
+        icone: '🌾',
+        texto: 'O estoque de comida apodreceu, perdendo 0,7 Kg de comida.'
+      },
+      // Energia
+      {
+        tipo: 'ENERGIA',
+        icone: '🔋',
+        texto: 'Na mochila de Bento tinha sais minerais, adicionando 0,15 de energia.'
+      },
+      // Água
+      {
+        tipo: 'ÁGUA',
+        icone: '💧',
+        texto: 'Na mochila de Fernanda tinha água potável, adicionando 3/4 litros de água.'
+      },
+      // Comida
+      {
+        tipo: 'COMIDA',
+        icone: '🌾',
+        texto: 'Foi cultivado cereais e a colheita foi rápida, ganhando 3,85 Kg de comida.'
+      },
+      // Energia
+      {
+        tipo: 'ENERGIA',
+        icone: '🔋',
+        texto: 'Uma rajada de vento consumiu 0,5 da bateria.'
+      },
+      // Água
+      {
+        tipo: 'ÁGUA',
+        icone: '💧',
+        texto: 'Um furo inesperado reduziu 2/5 litros de água.'
+      },
+      // Comida
+      {
+        tipo: 'COMIDA',
+        icone: '🌾',
+        texto: 'Inimigos sabotaram o estoque, saqueando 1 kg de comida.'
+      },
+      // Energia
+      {
+        tipo: 'ENERGIA',
+        icone: '🔋',
+        texto: 'Falha no gerador consumiu 15% da bateria.'
+      },
+      // Água
+      {
+        tipo: 'ÁGUA',
+        icone: '💧',
+        texto: 'Hélio derrubou 7/3 litros de água.'
+      },
+      // Comida
+      {
+        tipo: 'COMIDA',
+        icone: '🌾',
+        texto: 'Aliados enviaram 2,04 Kg de comida.'
+      },
+      // Energia
+      {
+        tipo: 'ENERGIA',
+        icone: '🔋',
+        texto: 'Reparos improvisados restauram 50% da bateria.'
+      },
+      // Água
+      {
+        tipo: 'ÁGUA',
+        icone: '💧',
+        texto: 'Foi encontrado um galão com 2 litros de água.'
+      },
+      // Comida
+      {
+        tipo: 'COMIDA',
+        icone: '🌾',
+        texto: 'A mochila ficou aberta e perderam 0,5 kg de comida.'
+      }
+    ];
+
+    let currentCardIndex = -1;
+    const totalCards = cartas.length;
+
+    const nextBtn = document.getElementById('next-btn');
+    const restartBtn = document.getElementById('restart-btn');
+    const cardDisplay = document.getElementById('card-display');
+    const currentCardSpan = document.getElementById('current-card');
+    const totalCardsSpan = document.getElementById('total-cards');
+
+    function displayCard(index) {
+      if (index < 0 || index >= totalCards) return;
+
+      const carta = cartas[index];
+      
+      cardDisplay.innerHTML = `
+        <div class="card">
+          <div class="card-content">
+            <div class="card-type">${carta.tipo}</div>
+            <div class="card-icon">${carta.icone}</div>
+            <div class="card-text">${carta.texto}</div>
+          </div>
+        </div>
+      `;
+
+      currentCardSpan.textContent = index + 1;
+    }
+
+    function nextCard() {
+      if (currentCardIndex < totalCards - 1) {
+        currentCardIndex++;
+        displayCard(currentCardIndex);
+
+        if (currentCardIndex === totalCards - 1) {
+          nextBtn.disabled = true;
+        }
+      }
+    }
+
+    function restartGame() {
+      currentCardIndex = -1;
+      nextBtn.disabled = false;
+      cardDisplay.innerHTML = `
+        <div class="card">
+          <div class="card-content">
+            <div class="card-type">Pronto?</div>
+            <div class="card-icon">🎴</div>
+            <div class="card-text">Clique em "Próxima Carta" para começar a investigação!</div>
+          </div>
+        </div>
+      `;
+      currentCardSpan.textContent = '1';
+    }
+
+    nextBtn.addEventListener('click', nextCard);
+    restartBtn.addEventListener('click', restartGame);
+  </script>
+  <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9cc5a198c3603efc',t:'MTc3MDgzMTYyNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9cc60dca46583efc',t:'MTc3MDgzNjA1Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
